@@ -3,6 +3,7 @@ typedef struct{
     float image;
 }complex;
 
+void shiyanggetImgSrc();
 void shiyangfft2d();
 void shiyangcvdft2d();
 

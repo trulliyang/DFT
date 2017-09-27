@@ -18,6 +18,8 @@
 #define complexsize sizeof(complex)
 #define PI 3.1415926
 
+float *imgSrc;
+
 int *a,*b;
 int nLen, init_nLen ,mLen, init_mLen, N, M;
 FILE *dataFile;
@@ -392,3 +394,17 @@ void shiyangcvdft2d()
     }
 }
 
+void shiyanggetImgSrc()
+{
+    imgSrc = new float[512*512];
+    cv::Mat img = cv::imread("/Users/admin/Desktop/beautyTest/dilireba.png", CV_LOAD_IMAGE_GRAYSCALE);
+    for (int j=0; j<512; j++) {
+        for (int i=0; i<512; i++) {
+            int idx = j*512+i;
+            imgSrc[idx] = img.at<unsigned char>(j, i);
+            if (idx<20) printf("imgSrc %f\n", imgSrc[idx]);
+        }
+    }
+    
+    
+}

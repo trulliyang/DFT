@@ -1127,6 +1127,7 @@ void generateImg(Complex *src, int size_w, int size_h, char *dst)
 #include "fft2d.h"
 
 int main(int argc, const char * argv[]) {
+    shiyanggetImgSrc();
     shiyangfft2d();
     shiyangcvdft2d();
     return 1;
