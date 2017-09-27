@@ -10,7 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc.hpp>
 #define intsize sizeof(int)
 #define complexsize sizeof(complex)
 #define PI 3.1415926
@@ -71,11 +74,11 @@ void readData()
         {
             if(A_In[i*nLen+j].image < 0)
             {
-                printf("%f%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
             else
             {
-                printf("%f+%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f+%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
         }
         printf("\n");
@@ -90,11 +93,11 @@ void readData()
         {
             if(A_In[i*nLen+j].image < 0)
             {
-                printf("%f%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
             else
             {
-                printf("%f+%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f+%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
         }
         printf("\n");
@@ -143,11 +146,11 @@ void printResult_fft()
         {
             if(A_In[i*nLen+j].image < 0)
             {
-                printf("%f%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
             else
             {
-                printf("%f+%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f+%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
         }
         printf("\n");
@@ -165,11 +168,11 @@ void printResult_Ifft()
         {
             if(A_In[i*nLen+j].image < 0)
             {
-                printf("%f%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
             else
             {
-                printf("%f+%fi\t",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
+                printf("%f+%fi\n",A_In[i*nLen+j].real,A_In[i*nLen+j].image);
             }
         }
         printf("\n");
@@ -352,3 +355,40 @@ void shiyangfft2d()
     Ifft();
     printResult_Ifft();
 }
+
+void shiyangcvdft2d()
+{
+    cv::Mat planes0[] = {cv::Mat::zeros(cvSize(16,16), CV_32F), cv::Mat::zeros(cvSize(16,16), CV_32F) };
+    cv::Mat planes1[] = {cv::Mat::zeros(cvSize(16,16), CV_32F), cv::Mat::zeros(cvSize(16,16), CV_32F) };
+    for (int j=0; j<16; j++) {
+        for (int i=0; i<16; i++) {
+            planes0[0].at<float>(j, i) = j*16+i;
+            planes1[0].at<float>(i, j) = j*16+i;
+        }
+    }
+    cv::Mat complexI0;
+    merge(planes0, 2, complexI0);
+    
+    dft(complexI0, complexI0);
+    split(complexI0, planes0);
+
+    cv::Mat complexI1;
+    merge(planes1, 2, complexI1);
+    
+    dft(complexI1, complexI1);
+    split(complexI1, planes1);
+    
+    for (int j=0; j<16; j++) {
+        for (int i=0; i<16; i++) {
+            int idx=j*16+i;
+            printf("0i=%d,real=%f,imag=%f\n",idx, planes0[0].at<float>(j, i), planes0[1].at<float>(j, i));
+        }
+    }
+    for (int j=0; j<16; j++) {
+        for (int i=0; i<16; i++) {
+            int idx=j*16+i;
+            printf("1i=%d,real=%f,imag=%f\n",idx, planes1[0].at<float>(j, i), planes1[1].at<float>(j, i));
+        }
+    }
+}
+

@@ -1128,6 +1128,7 @@ void generateImg(Complex *src, int size_w, int size_h, char *dst)
 
 int main(int argc, const char * argv[]) {
     shiyangfft2d();
+    shiyangcvdft2d();
     return 1;
     
     IplImage *ImagePic = cvLoadImage("/Users/admin/Desktop/beautyTest/dilireba.png",
@@ -1180,7 +1181,7 @@ int main(int argc, const char * argv[]) {
     IplImage *Image = cvCreateImage(cvSize(WIDTH,HEIGHT), IPL_DEPTH_8U, 1);
     for (int i=0; i<SIZE; i++) {
         Image->imageData[i] = (char)dst[i].real;
-        if (i<20) {
+        if (i<256) {
             printf("fft2d =%d, real=%lf,imag=%lf\n", i, dst[i].real, dst[i].imagin);
         }
     }
@@ -1352,6 +1353,9 @@ int main(int argc, const char * argv[]) {
         }
     }
     
+    for (int i=0; i<256; i++) {
+        image.at<unsigned char>(i) = i;
+    }
     
     cv::Mat padded;
     int m = cv::getOptimalDFTSize(image.rows);  // Return size of 2^x that suite for FFT
@@ -1359,6 +1363,12 @@ int main(int argc, const char * argv[]) {
     // Padding 0, result is @padded
     copyMakeBorder(image, padded, 0, m-image.rows, 0, n-image.cols, 0, cv::Scalar::all(0));
     cv::Mat planes[] = {cv::Mat_<float>(padded), cv::Mat::zeros(padded.size(), CV_32F) };
+
+    
+    
+    
+    
+    
     cv::Mat complexI;
     merge(planes, 2, complexI);
     
@@ -1377,6 +1387,14 @@ int main(int argc, const char * argv[]) {
 //            bool leftBottom = (i<WIDTH/10) && (j>HEIGHT*9/10);
 //            bool RightBottom = (i>WIDTH*9/10) && (j>HEIGHT*9/10);
 //            bool need = leftTop || rightTop || leftBottom || RightBottom;
+            
+            int idx = j*HEIGHT+i;
+            if (idx < 256) {
+//                printf("i=%d,j=%d, real=%f,imag=%f\n", i, j, planes[0].at<float>(i,j), planes[1].at<float>(i,j));
+//                printf("i=%d,j=%d, real=%f,imag=%f\n", i, j, planes[0].at<float>(j,i), planes[1].at<float>(j,i));
+                printf("idx=%d,real=%f,imag=%f\n", idx, planes[0].at<float>(idx), planes[1].at<float>(idx));
+            }
+            
             
             float dx = 0.0;
             float dy = 0.0;
