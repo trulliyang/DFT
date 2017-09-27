@@ -31,8 +31,8 @@ void readData()
 //    int data[16][16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 //    dataFile = fopen("dataIn.txt","r");
 //    fscanf(dataFile,"%d %d", &init_mLen, &init_nLen);
-    init_nLen = 16;
-    init_mLen = 16;
+    init_nLen = 512;
+    init_mLen = 512;
     
     
     M = calculate_M(init_mLen);
@@ -45,11 +45,11 @@ void readData()
     {
         for(j=0; j<init_nLen; j++)
         {
-            A_In[i*nLen+j].real = i*nLen+j;
+            A_In[i*nLen+j].real = imgSrc[i*nLen+j];
             A_In[i*nLen+j].image = 0.0;
         }
     }
-    fclose(dataFile);
+//    fclose(dataFile);
     
     for(i=0; i<mLen; i++)
     {
@@ -68,6 +68,8 @@ void readData()
             A_In[i*nLen+j].image = 0.0;
         }
     }
+    
+    return;
     
     printf("Reading initial datas:\n");
     for(i=0; i<init_mLen; i++)
@@ -354,6 +356,13 @@ void shiyangfft2d()
     }
     free(A);
     printResult_fft();
+    
+    doMag();
+    doPlusOne();
+    doLog();
+    
+    
+    
     Ifft();
     printResult_Ifft();
 }

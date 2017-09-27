@@ -1129,8 +1129,8 @@ void generateImg(Complex *src, int size_w, int size_h, char *dst)
 int main(int argc, const char * argv[]) {
     shiyanggetImgSrc();
     shiyangfft2d();
-    shiyangcvdft2d();
-    return 1;
+//    shiyangcvdft2d();
+//    return 1;
     
     IplImage *ImagePic = cvLoadImage("/Users/admin/Desktop/beautyTest/dilireba.png",
                                      CV_LOAD_IMAGE_GRAYSCALE);
@@ -1390,7 +1390,7 @@ int main(int argc, const char * argv[]) {
 //            bool need = leftTop || rightTop || leftBottom || RightBottom;
             
             int idx = j*HEIGHT+i;
-            if (idx < 256) {
+            if (idx < 16) {
 //                printf("i=%d,j=%d, real=%f,imag=%f\n", i, j, planes[0].at<float>(i,j), planes[1].at<float>(i,j));
 //                printf("i=%d,j=%d, real=%f,imag=%f\n", i, j, planes[0].at<float>(j,i), planes[1].at<float>(j,i));
                 printf("idx=%d,real=%f,imag=%f\n", idx, planes[0].at<float>(idx), planes[1].at<float>(idx));
