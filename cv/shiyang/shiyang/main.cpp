@@ -1124,7 +1124,12 @@ void generateImg(Complex *src, int size_w, int size_h, char *dst)
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
+#include "fft2d.h"
+
 int main(int argc, const char * argv[]) {
+    shiyangfft2d();
+    return 1;
+    
     IplImage *ImagePic = cvLoadImage("/Users/admin/Desktop/beautyTest/dilireba.png",
                                      CV_LOAD_IMAGE_GRAYSCALE);
     cvNamedWindow("pic", 1);
