@@ -19,6 +19,9 @@
 #define PI 3.1415926
 
 float *imgSrc;
+float *magPlusOne;
+float *normalise;
+float *logE;
 
 int *a,*b;
 int nLen, init_nLen ,mLen, init_mLen, N, M;
@@ -357,15 +360,87 @@ void shiyangfft2d()
     free(A);
     printResult_fft();
     
-    doMag();
-    doPlusOne();
-    doLog();
-    
-    
-    
+    doMagPlusOne();
+    doLogE();
+    doNormalise();
+    doHighPass();
+
     Ifft();
     printResult_Ifft();
 }
+
+void doMagPlusOne()
+{
+    magPlusOne = new float[512*512];
+    for(int i=0; i<init_mLen; i++)
+    {
+        for(int j=0; j<init_nLen; j++)
+        {
+            int idx = i*nLen+j;
+            float sqroot = sqrt(A_In[idx].real*A_In[idx].real+A_In[idx].image*A_In[idx].image);
+            magPlusOne[idx] = 1.0 + sqroot;
+        }
+    }
+}
+
+void doLogE()
+{
+    logE = new float[512*512];
+    for(int i=0; i<init_mLen; i++)
+    {
+        for(int j=0; j<init_nLen; j++)
+        {
+            int idx = i*nLen+j;
+            logE[idx] = log(magPlusOne[idx]);
+        }
+    }
+}
+
+void doNormalise()
+{
+    float max = -1.0;
+    float min = 10000.0;
+    normalise = new float[512*512];
+    char *normaliseChar = new char[512*512];
+    
+    
+    for(int i=0; i<init_mLen; i++)
+    {
+        for(int j=0; j<init_nLen; j++)
+        {
+            int idx = i*nLen+j;
+            if (logE[idx] > max) {
+                max = logE[idx];
+            }
+            if (logE[idx] < min) {
+                min = logE[idx];
+            }
+        }
+    }
+    float delta = max - min;
+    for(int i=0; i<init_mLen; i++)
+    {
+        for(int j=0; j<init_nLen; j++)
+        {
+            int idx = i*nLen+j;
+            normalise[idx] = (logE[idx] - min)/delta;
+            normaliseChar[idx] = (char) (255.0*normalise[idx]);
+        }
+    }
+    
+    cvNamedWindow("normaliseChar", 1);
+    IplImage *ImageNMLS = cvCreateImage(cvSize(512,512), IPL_DEPTH_8U, 1);
+    ImageNMLS->imageData = normaliseChar;
+    cvShowImage("normaliseChar", ImageNMLS);
+    cvWaitKey();
+    
+}
+
+void doHighPass()
+{
+    
+}
+
 
 void shiyangcvdft2d()
 {

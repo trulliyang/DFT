@@ -7,9 +7,11 @@ void shiyanggetImgSrc();
 void shiyangfft2d();
 void shiyangcvdft2d();
 
-void doMag();
-void doPlusOne();
-void doLog();
+void doMagPlusOne();
+void doLogE();
+void doNormalise();
+void doHighPass();
+
 
 complex Add(complex, complex);
 complex Sub(complex, complex);
