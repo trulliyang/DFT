@@ -18,6 +18,11 @@
 #define complexsize sizeof(complex)
 #define PI 3.1415926
 
+#define WIDTH 512
+#define HEIGHT 512
+
+
+float *imageSrc;
 int *a,*b;
 int nLen, init_nLen ,mLen, init_mLen, N, M;
 FILE *dataFile;
@@ -29,8 +34,8 @@ void readData()
 //    int data[16][16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 //    dataFile = fopen("dataIn.txt","r");
 //    fscanf(dataFile,"%d %d", &init_mLen, &init_nLen);
-    init_nLen = 16;
-    init_mLen = 16;
+    init_nLen = WIDTH;
+    init_mLen = HEIGHT;
     
     
     M = calculate_M(init_mLen);
@@ -43,11 +48,11 @@ void readData()
     {
         for(j=0; j<init_nLen; j++)
         {
-            A_In[i*nLen+j].real = i*nLen+j;
+            A_In[i*nLen+j].real = imageSrc[i*nLen+j];
             A_In[i*nLen+j].image = 0.0;
         }
     }
-    fclose(dataFile);
+//    fclose(dataFile);
     
     for(i=0; i<mLen; i++)
     {
@@ -392,3 +397,20 @@ void shiyangcvdft2d()
     }
 }
 
+void getImageSrc()
+{
+    imageSrc = new float[512*512];
+    
+    cv::Mat image = cv::imread("/Users/admin/Desktop/beautyTest/dilireba.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imshow("oriCV", image);
+    
+    printf("dilreba\n");
+    for (int j=0; j<512; j++) {
+        for (int i=0; i<512; i++) {
+            imageSrc[j*512+i] = image.at<unsigned char>(j, i);
+//            printf("%d=%d\n", j*512+i, image.at<unsigned char>(j, i));
+            printf("%d,", image.at<unsigned char>(j, i));
+        }
+    }
+    cvWaitKey();
+}
