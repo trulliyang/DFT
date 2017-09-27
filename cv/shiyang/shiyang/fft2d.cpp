@@ -360,12 +360,39 @@ void shiyangfft2d()
     free(A);
     printResult_fft();
     
-    doMagPlusOne();
-    doLogE();
-    doNormalise();
-    doHighPass();
-
+    if (false) {
+        doMagPlusOne();
+        doLogE();
+        doNormalise();
+        
+    }
+    if (false) {
+        doHighPass();
+        
+    }
     Ifft();
+    
+    char *imgChar = new char[512*512];
+    for(int i=0; i<init_mLen; i++)
+    {
+        for(int j=0; j<init_nLen; j++)
+        {
+            int idx = i*nLen+j;
+            imgChar[idx] = (char) (255*(A_In[idx].real/255.0));
+        }
+    }
+    
+    
+    
+    cvNamedWindow("shiyangifft", 1);
+    IplImage *ImageIFFT = cvCreateImage(cvSize(512,512), IPL_DEPTH_8U, 1);
+    ImageIFFT->imageData = imgChar;
+    cvShowImage("shiyangifft", ImageIFFT);
+    cvWaitKey();
+    
+    
+    
+    
     printResult_Ifft();
 }
 
@@ -403,7 +430,6 @@ void doNormalise()
     normalise = new float[512*512];
     char *normaliseChar = new char[512*512];
     
-    
     for(int i=0; i<init_mLen; i++)
     {
         for(int j=0; j<init_nLen; j++)
@@ -417,6 +443,7 @@ void doNormalise()
             }
         }
     }
+    
     float delta = max - min;
     for(int i=0; i<init_mLen; i++)
     {
@@ -433,12 +460,41 @@ void doNormalise()
     ImageNMLS->imageData = normaliseChar;
     cvShowImage("normaliseChar", ImageNMLS);
     cvWaitKey();
-    
 }
 
 void doHighPass()
 {
-    
+    for(int i=0; i<init_mLen; i++)
+    {
+        for(int j=0; j<init_nLen; j++)
+        {
+            bool corner0 = i<=init_mLen/2 && j<=init_nLen/2;
+            bool corner1 = i<=init_mLen/2 && j>init_nLen/2;
+            bool corner2 = i>init_mLen/2 && j<=init_nLen/2;
+            bool corner3 = i>init_mLen/2 && j>init_nLen/2;
+            int di=0,dj=0;
+            if (corner0) {
+                di = i;
+                dj = j;
+            } else if (corner1) {
+                di = i;
+                dj = init_nLen-j;
+            } else if (corner2) {
+                di = init_mLen-i;
+                dj = j;
+            } else if (corner3) {
+                di = init_mLen-i;
+                dj = init_nLen-j;
+            }
+            float dist = sqrt(di*di+dj*dj);
+            int idx = i*nLen+j;
+            
+            if (dist<50.0) {
+                A_In[idx].real = 0.0;
+//                A_In[idx].image = 0.0;
+            }
+        }
+    }
 }
 
 
