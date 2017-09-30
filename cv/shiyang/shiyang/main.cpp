@@ -1130,7 +1130,7 @@ int main(int argc, const char * argv[]) {
     shiyanggetImgSrc();
     shiyangfft2d();
 //    shiyangcvdft2d();
-    return 1;
+//    return 1;
     
     IplImage *ImagePic = cvLoadImage("/Users/admin/Desktop/beautyTest/dilireba.png",
                                      CV_LOAD_IMAGE_GRAYSCALE);
@@ -1415,7 +1415,7 @@ int main(int argc, const char * argv[]) {
                 dy = HEIGHT-j;
             }
             float dist = sqrt(dx*dx+dy*dy);
-            float need = dist<WIDTH/10;
+            bool need = dist<WIDTH/10;
             
             if (!need) {
                 

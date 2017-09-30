@@ -10,8 +10,8 @@ void shiyangcvdft2d();
 void doMagPlusOne();
 void doLogE();
 void doNormalise();
+void doHighPass(complex *);
 void doHighPass();
-
 
 complex Add(complex, complex);
 complex Sub(complex, complex);

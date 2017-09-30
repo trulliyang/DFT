@@ -22,6 +22,7 @@ float *imgSrc;
 float *magPlusOne;
 float *normalise;
 float *logE;
+float *highpass;
 
 int *a,*b;
 int nLen, init_nLen ,mLen, init_mLen, N, M;
@@ -358,18 +359,19 @@ void shiyangfft2d()
         }
     }
     free(A);
-    printResult_fft();
+//    printResult_fft();
     
-    if (false) {
+    if (true) {
         doMagPlusOne();
         doLogE();
         doNormalise();
-        
-    }
-    if (false) {
         doHighPass();
-        
     }
+    
+    if (true) {
+        doHighPass(A_In);
+    }
+    
     Ifft();
     
     char *imgChar = new char[512*512];
@@ -382,18 +384,13 @@ void shiyangfft2d()
         }
     }
     
-    
-    
     cvNamedWindow("shiyangifft", 1);
     IplImage *ImageIFFT = cvCreateImage(cvSize(512,512), IPL_DEPTH_8U, 1);
     ImageIFFT->imageData = imgChar;
     cvShowImage("shiyangifft", ImageIFFT);
-    cvWaitKey();
+//    cvWaitKey();
     
-    
-    
-    
-    printResult_Ifft();
+//    printResult_Ifft();
 }
 
 void doMagPlusOne()
@@ -451,6 +448,9 @@ void doNormalise()
         {
             int idx = i*nLen+j;
             normalise[idx] = (logE[idx] - min)/delta;
+            if (normalise[idx] < 0.0) {
+                printf("shiyang error normalise wrong");
+            }
             normaliseChar[idx] = (char) (255.0*normalise[idx]);
         }
     }
@@ -459,42 +459,98 @@ void doNormalise()
     IplImage *ImageNMLS = cvCreateImage(cvSize(512,512), IPL_DEPTH_8U, 1);
     ImageNMLS->imageData = normaliseChar;
     cvShowImage("normaliseChar", ImageNMLS);
-    cvWaitKey();
 }
 
-void doHighPass()
+void doHighPass(complex *_in)
 {
     for(int i=0; i<init_mLen; i++)
     {
         for(int j=0; j<init_nLen; j++)
         {
-            bool corner0 = i<=init_mLen/2 && j<=init_nLen/2;
-            bool corner1 = i<=init_mLen/2 && j>init_nLen/2;
-            bool corner2 = i>init_mLen/2 && j<=init_nLen/2;
-            bool corner3 = i>init_mLen/2 && j>init_nLen/2;
-            int di=0,dj=0;
+            bool corner0 = (i<=init_mLen/2) && (j<=init_nLen/2);
+            bool corner1 = (i<=init_mLen/2) && (j>init_nLen/2);
+            bool corner2 = (i>init_mLen/2) && (j<=init_nLen/2);
+            bool corner3 = (i>init_mLen/2) && (j>init_nLen/2);
+            int di=i,dj=j;
             if (corner0) {
                 di = i;
                 dj = j;
-            } else if (corner1) {
+            }
+            if (corner1) {
                 di = i;
                 dj = init_nLen-j;
-            } else if (corner2) {
+            }
+            if (corner2) {
                 di = init_mLen-i;
                 dj = j;
-            } else if (corner3) {
+            }
+            if (corner3) {
                 di = init_mLen-i;
                 dj = init_nLen-j;
             }
             float dist = sqrt(di*di+dj*dj);
             int idx = i*nLen+j;
+//            int idx = i*mLen+j;
+//            bool need =dist<512/10;
+//            if (need) {
+//                _in[idx].real *= 0.0;
+//                _in[idx].image *= 0.0;
+//            }
+            float alpha = dist/512/sqrt(2.0);
+            _in[idx].real *= (alpha);
+            _in[idx].image *= (alpha);
             
-            if (dist<50.0) {
-                A_In[idx].real = 0.0;
-//                A_In[idx].image = 0.0;
-            }
+            
         }
     }
+}
+
+void doHighPass()
+{
+    highpass = new float[512*512];
+    char *highpassChar = new char[512*512];
+    for(int i=0; i<init_mLen; i++)
+    {
+        for(int j=0; j<init_nLen; j++)
+        {
+            bool corner0 = (i<=init_mLen/2) && (j<=init_nLen/2);
+            bool corner1 = (i<=init_mLen/2) && (j>init_nLen/2);
+            bool corner2 = (i>init_mLen/2) && (j<=init_nLen/2);
+            bool corner3 = (i>init_mLen/2) && (j>init_nLen/2);
+            int di=512,dj=512;
+            if (corner0) {
+                di = i;
+                dj = j;
+            }
+            if (corner1) {
+                di = i;
+                dj = init_nLen-j;
+            }
+            if (corner2) {
+                di = init_mLen-i;
+                dj = j;
+            }
+            if (corner3) {
+                di = init_mLen-i;
+                dj = init_nLen-j;
+            }
+            float dist = sqrt(di*di+dj*dj);
+            int idx = i*nLen+j;
+            //            int idx = i*mLen+j;
+            bool need =dist<512/10;
+            if (need) {
+                highpass[idx] *= 0.0;
+            } else {
+                highpass[idx] = normalise[idx];
+            }
+            highpassChar[idx] = (char) (255.0*highpass[idx]);
+        }
+    }
+    
+    cvNamedWindow("highpassChar", 1);
+    IplImage *ImageHP = cvCreateImage(cvSize(512,512), IPL_DEPTH_8U, 1);
+    ImageHP->imageData = highpassChar;
+    cvShowImage("highpassChar", ImageHP);
 }
 
 
@@ -545,6 +601,4 @@ void shiyanggetImgSrc()
             if (idx<20) printf("imgSrc %f\n", imgSrc[idx]);
         }
     }
-    
-    
 }
