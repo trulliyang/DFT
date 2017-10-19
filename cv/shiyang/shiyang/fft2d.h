@@ -1,11 +1,16 @@
 typedef struct{
-    float real;
-    float image;
+//    float real;
+//    float image;
+    double real;
+    double image;
 }complex;
 
 void shiyanggetImgSrc();
 void shiyangfft2d();
 void shiyangcvdft2d();
+void shiyangcvdft2dimage();
+void shiyangtestifft();
+void shiyangtestcvidft2d();
 
 void doMagPlusOne();
 void doLogE();

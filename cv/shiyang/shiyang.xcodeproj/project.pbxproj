@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		845034761F97442F00AF5EEB /* abcfft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 845034741F97442F00AF5EEB /* abcfft.cpp */; };
 		8483C5041F7A82CA00368A3A /* fft2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8483C5021F7A82CA00368A3A /* fft2d.cpp */; };
 		84C365071F0F6CB6009F8D18 /* libopencv_calib3d.3.2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C364D71F0F6CB6009F8D18 /* libopencv_calib3d.3.2.0.dylib */; };
 		84C365081F0F6CB6009F8D18 /* libopencv_calib3d.3.2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C364D81F0F6CB6009F8D18 /* libopencv_calib3d.3.2.0.dylib */; };
@@ -73,6 +74,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		845034741F97442F00AF5EEB /* abcfft.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = abcfft.cpp; sourceTree = "<group>"; };
+		845034751F97442F00AF5EEB /* abcfft.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = abcfft.hpp; sourceTree = "<group>"; };
 		8483C5021F7A82CA00368A3A /* fft2d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fft2d.cpp; sourceTree = "<group>"; };
 		8483C5031F7A82CA00368A3A /* fft2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fft2d.h; sourceTree = "<group>"; };
 		84C364CC1F0F6C6A009F8D18 /* shiyang */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shiyang; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,6 +216,8 @@
 				84C365391F0F6D2D009F8D18 /* color_adjust.hpp */,
 				84C3653A1F0F6D2D009F8D18 /* color_adjust.cpp */,
 				84C365371F0F6CFA009F8D18 /* main.cpp */,
+				845034741F97442F00AF5EEB /* abcfft.cpp */,
+				845034751F97442F00AF5EEB /* abcfft.hpp */,
 			);
 			path = shiyang;
 			sourceTree = "<group>";
@@ -330,6 +335,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8483C5041F7A82CA00368A3A /* fft2d.cpp in Sources */,
+				845034761F97442F00AF5EEB /* abcfft.cpp in Sources */,
 				84C3653B1F0F6D2D009F8D18 /* color_adjust.cpp in Sources */,
 				84C365381F0F6CFA009F8D18 /* main.cpp in Sources */,
 			);

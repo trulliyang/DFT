@@ -1129,8 +1129,12 @@ void generateImg(Complex *src, int size_w, int size_h, char *dst)
 int main(int argc, const char * argv[]) {
     shiyanggetImgSrc();
     shiyangfft2d();
+//    shiyangtestifft();
+
+    shiyangcvdft2dimage();
 //    shiyangcvdft2d();
-//    return 1;
+//     shiyangtestcvidft2d();
+    return 1;
     
     IplImage *ImagePic = cvLoadImage("/Users/admin/Desktop/beautyTest/dilireba.png",
                                      CV_LOAD_IMAGE_GRAYSCALE);
@@ -1183,7 +1187,7 @@ int main(int argc, const char * argv[]) {
     for (int i=0; i<SIZE; i++) {
         Image->imageData[i] = (char)dst[i].real;
         if (i<256) {
-            printf("fft2d =%d, real=%lf,imag=%lf\n", i, dst[i].real, dst[i].imagin);
+//            printf("fft2d =%d, real=%lf,imag=%lf\n", i, dst[i].real, dst[i].imagin);
         }
     }
     cvShowImage("fft", Image);
@@ -1686,5 +1690,17 @@ int main()
     temp.copyTo(m3);
     imshow("shift",plane[0]); //低频中心化的图像
     waitKey(0);
+}
+#elif 0
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <iostream>
+
+#include "abcfft.hpp"
+
+int main(int argc, const char * argv[]) {
+    abcStart();
 }
 #endif
